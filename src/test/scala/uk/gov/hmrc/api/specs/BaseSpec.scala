@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,23 +17,47 @@
 package uk.gov.hmrc.api.specs
 
 import org.scalatest.{BeforeAndAfterEach, GivenWhenThen}
-import org.scalatest.concurrent.Eventually
+import org.scalatest.concurrent.{Eventually, ScalaFutures}
 import org.scalatest.featurespec.AnyFeatureSpec
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.time.{Millis, Seconds, Span}
 
-trait BaseSpec extends AnyFeatureSpec with GivenWhenThen with Matchers with Eventually with BeforeAndAfterEach {
+import org.scalatestplus.play.guice.GuiceOneServerPerSuite
+import play.api.Application
+import play.api.inject.guice.GuiceApplicationBuilder
 
-  // This configuration determines how long `eventually` will wait for its assertions to become true
+import scala.concurrent.ExecutionContext
+
+import uk.gov.hmrc.api.helpers.Module
+import uk.gov.hmrc.api.services.ServiceFactory
+import uk.gov.hmrc.http.client.HttpClientV2
+
+trait BaseSpec
+    extends AnyFeatureSpec
+    with GivenWhenThen
+    with Matchers
+    with Eventually
+    with ScalaFutures
+    with BeforeAndAfterEach
+    with GuiceOneServerPerSuite {
+
   override implicit val patienceConfig: PatienceConfig =
     PatienceConfig(
       timeout = Span(30, Seconds),
       interval = Span(500, Millis)
     )
 
-  override protected def beforeEach(): Unit =
-    super.beforeEach()
+  implicit lazy val ec: ExecutionContext =
+    scala.concurrent.ExecutionContext.Implicits.global
 
-  override protected def afterEach(): Unit =
-    super.afterEach()
+  override lazy val app: Application =
+    new GuiceApplicationBuilder()
+      .bindings(new Module)
+      .build()
+
+  protected lazy val httpClient: HttpClientV2 =
+    app.injector.instanceOf[HttpClientV2]
+
+  protected lazy val service: ServiceFactory =
+    new ServiceFactory(httpClient)
 }

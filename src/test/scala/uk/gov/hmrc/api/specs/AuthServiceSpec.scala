@@ -14,6 +14,24 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.api.helpers
+package uk.gov.hmrc.api.specs
 
-object ApiHelper {}
+class AuthServiceSpec extends BaseSpec {
+
+  Feature("Authentication") {
+
+    Scenario("Can retrieve bearer token") {
+
+      Given("the auth login api is available")
+
+      When("a bearer token is requested")
+
+      val token =
+        service.getBearerToken.futureValue
+
+      Then("a non-empty bearer token is returned")
+
+      token.nonEmpty shouldBe true
+    }
+  }
+}

@@ -16,19 +16,31 @@
 
 package uk.gov.hmrc.api.specs
 
-class SampleSpec extends BaseSpec {
+class GetSubmissionsSpec extends BaseSpec {
 
-  Feature("API test framework") {
+  Feature("Get Submissions") {
 
-    Scenario("Verify the API test framework is configured correctly") {
+    Scenario("Authenticated user can retrieve submissions") {
 
-      Given("the API test framework has been set up")
+      Given("a valid bearer token")
 
-      When("the tests are executed")
+      val token =
+        service.getBearerToken.futureValue
 
-      Then("the sample test should run successfully")
+      When("the submissions endpoint is called")
 
-      1 + 1 shouldBe 2
+      val response =
+        service
+          .getSubmissions(token)
+          .futureValue
+
+      Then("a successful response is returned")
+
+      response.status shouldBe 200
+
+      And("the response contains the submissions root element")
+
+      response.body should include("<Submissions>")
     }
   }
 }
