@@ -41,6 +41,14 @@ class GetSubmissionsSpec extends BaseSpec {
       And("the response contains the submissions root element")
 
       response.body should include("<Submissions>")
+
+      And("the response contains submission records")
+
+      response.body should include("<Submission>")
+
+      And("the response contains submission identifiers")
+
+      response.body should include("<submissionId>")
     }
   }
 }
