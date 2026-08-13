@@ -14,6 +14,34 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.api.models
+package uk.gov.hmrc.api.conf
 
-trait BaseModel {}
+import com.typesafe.config.ConfigFactory
+
+object TestEnvironment {
+
+  private val config = ConfigFactory.load()
+
+  private val environment =
+    config.getString("environment")
+
+  def url(serviceName: String): String = {
+
+    val base =
+      s"$environment.services"
+
+    val host =
+      config.getString(s"$base.host")
+
+    val route =
+      config.getString(s"$base.$serviceName.productionRoute")
+
+    val portPath =
+      s"$base.$serviceName.port"
+
+    if (config.hasPath(portPath))
+      s"$host:${config.getInt(portPath)}$route"
+    else
+      s"$host$route"
+  }
+}

@@ -16,19 +16,22 @@
 
 package uk.gov.hmrc.api.specs
 
-class SampleSpec extends BaseSpec {
+class AuthServiceSpec extends BaseSpec {
 
-  Feature("API test framework") {
+  Feature("Authentication") {
 
-    Scenario("Verify the API test framework is configured correctly") {
+    Scenario("Can retrieve bearer token") {
 
-      Given("the API test framework has been set up")
+      Given("the auth login api is available")
 
-      When("the tests are executed")
+      When("a bearer token is requested")
 
-      Then("the sample test should run successfully")
+      val token =
+        service.getBearerToken.futureValue
 
-      1 + 1 shouldBe 2
+      Then("a non-empty bearer token is returned")
+
+      token.nonEmpty shouldBe true
     }
   }
 }

@@ -14,6 +14,14 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.api.services
+package uk.gov.hmrc.api.helpers
 
-trait BaseService {}
+import scala.io.Source
+
+object PayloadLoader {
+
+  def load(fileName: String): String =
+    Source
+      .fromResource(s"payloads/$fileName")
+      .mkString
+}

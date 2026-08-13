@@ -16,4 +16,12 @@
 
 package uk.gov.hmrc.api.helpers
 
-object ApiHelper {}
+import com.google.inject.AbstractModule
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.test.HttpClientV2Support
+
+class Module extends AbstractModule with HttpClientV2Support {
+
+  override def configure(): Unit =
+    bind(classOf[HttpClientV2]).toInstance(httpClientV2)
+}
