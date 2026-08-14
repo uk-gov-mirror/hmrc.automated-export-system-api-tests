@@ -16,7 +16,26 @@
 
 package uk.gov.hmrc.api.specs
 
-class GetSubmissionsSpec extends BaseSpec {
+import org.scalatest.BeforeAndAfterAll
+import uk.gov.hmrc.api.helpers.PayloadLoader
+
+class GetSubmissionsSpec extends BaseSpec with BeforeAndAfterAll {
+
+  private var bearerToken: String = _
+
+  override def beforeAll(): Unit = {
+    bearerToken = service.getBearerToken.futureValue
+
+    val xml =
+      PayloadLoader.load("valid-ie507.xml")
+
+    service
+      .submitMessage(
+        xml,
+        bearerToken
+      )
+      .futureValue
+  }
 
   Feature("Get Submissions") {
 
@@ -24,14 +43,11 @@ class GetSubmissionsSpec extends BaseSpec {
 
       Given("a valid bearer token")
 
-      val token =
-        service.getBearerToken.futureValue
-
       When("the submissions endpoint is called")
 
       val response =
         service
-          .getSubmissions(token)
+          .getSubmissions(bearerToken)
           .futureValue
 
       Then("a successful response is returned")
