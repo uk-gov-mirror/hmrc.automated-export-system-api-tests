@@ -31,14 +31,13 @@ class AesService(client: HttpClientV2)(implicit ec: ExecutionContext) {
     s"${TestEnvironment.url("aes")}/message"
 
   def submitMessage(
-      xml: String,
-      bearerToken: String
+    xml: String,
+    bearerToken: String
   ): Future[HttpResponse] = {
 
     implicit val hc: HeaderCarrier =
       HeaderCarrier(
-        authorization =
-          Some(Authorization(s"Bearer $bearerToken"))
+        authorization = Some(Authorization(s"Bearer $bearerToken"))
       )
 
     client
@@ -51,8 +50,8 @@ class AesService(client: HttpClientV2)(implicit ec: ExecutionContext) {
       .execute[HttpResponse]
   }
 
-    def submitMessageWithoutAuth(
-      xml: String
+  def submitMessageWithoutAuth(
+    xml: String
   ): Future[HttpResponse] = {
 
     implicit val hc: HeaderCarrier =
@@ -68,14 +67,13 @@ class AesService(client: HttpClientV2)(implicit ec: ExecutionContext) {
       .execute[HttpResponse]
   }
 
-    def getSubmissions(
-      bearerToken: String
+  def getSubmissions(
+    bearerToken: String
   ): Future[HttpResponse] = {
 
     implicit val hc: HeaderCarrier =
       HeaderCarrier(
-        authorization =
-          Some(Authorization(s"Bearer $bearerToken"))
+        authorization = Some(Authorization(s"Bearer $bearerToken"))
       )
 
     client
@@ -83,4 +81,3 @@ class AesService(client: HttpClientV2)(implicit ec: ExecutionContext) {
       .execute[HttpResponse]
   }
 }
-
