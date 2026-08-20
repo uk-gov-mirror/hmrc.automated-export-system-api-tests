@@ -45,15 +45,14 @@ class GetSubmissionSpec extends BaseSpec with BeforeAndAfterAll {
         .getSubmissions(bearerToken)
         .futureValue
 
-    submissionId =
-      "<submissionId>(.*?)</submissionId>".r
-        .findFirstMatchIn(submissionsResponse.body)
-        .map(_.group(1))
-        .getOrElse(
-          throw new RuntimeException(
-            "No submissionId found in submissions list - cannot proceed with test setup"
-          )
+    submissionId = "<submissionId>(.*?)</submissionId>".r
+      .findFirstMatchIn(submissionsResponse.body)
+      .map(_.group(1))
+      .getOrElse(
+        throw new RuntimeException(
+          "No submissionId found in submissions list - cannot proceed with test setup"
         )
+      )
   }
 
   Feature("Get Submission by SubmissionId") {
